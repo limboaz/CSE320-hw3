@@ -1,0 +1,3 @@
+#1 the typo when including headers. Should be #include but not #inlucde. 
+#2 line 56, file pointer not passed in. 
+#3 

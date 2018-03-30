@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#inlcude <time.h>
+#include <time.h>
 
 struct wallets {
     uint32_t key;
@@ -25,10 +25,10 @@ uint32_t money_gen() {
     return money;
 }
 
-void generate_wallets(struct wallets* wallet) {
+void generate_wallets(struct wallets* wallet) {	//looks so wrong at this point
     int i = 0;
-    int num_wallets = 5000000;
-    for (i; i < num_wallets; ++i) {
+    int num_wallets = 5000000;	//very suspicious
+    for (i; i < num_wallets; ++i) {	//also the ++i
         wallet[i].key = key_gen();
         wallet[i].money = money_gen();
     }
@@ -42,10 +42,10 @@ void print_wallets(FILE* fp, int num_wallets, struct wallets* wallet) {
 
 int main(void) {
     printf("Welcome to the BTC wallet tracker.\n");
-    srand(time(NULL));
+    srand(time(NULL));	//hmmmmm
 
     char* filename = (char*)malloc(255);
-    char* command = (char*)malloc(255);
+    char* command = (char*)malloc(255);	//good
     FILE* fp = NULL;
     int num_wallets;
     int is_generated = 0;
@@ -53,7 +53,7 @@ int main(void) {
     pid_t pid;
 
     printf("Please enter the file name that contains number of wallets: ");
-    fscanf("%s", filename);
+    fscanf(fp, "%s", filename);	//need a file pointer
     fp = fopen(filename, "r");
     fscanf(fp, "%d", &num_wallets);
     struct wallets* wallet = (struct wallets*)malloc(num_wallets * sizeof(struct wallets));
@@ -61,7 +61,7 @@ int main(void) {
     printf("Type 'help' for list of available commands.\n");
 prompt:
     printf("prompt> ");
-    fscanf("%s", command);
+    fscanf("%s", command);	//again no file pointer or should just not be fscanf
     if (strcmp(command, "help") == 0) {
         if ((pid = fork()) == 0) {
             execvp("./print_help", NULL);
