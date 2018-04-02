@@ -1,3 +1,9 @@
+#0 Notice that line number may not be accurate due to the change of code, just an approximate indication of the location where the bugs happened. 
+
+
 #1 the typo when including headers. Should be #include but not #inlucde. 
-#2 line 56, file pointer not passed in. 
-#3 
+#2 line 56, should be scanf, since now we want to know the name of the file we want to open. 
+#3 line 64, fscanf should just be scanf, since now we just want to read command from console. 
+#4 line 66, using strcmp without including the string library. 
+#5 line 67, 72, using fork and sleep without including the unistd library. 
+#6 line 69, passing a null argument to execvp when you cannot do it. 

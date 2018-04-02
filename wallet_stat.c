@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <time.h>
+#include <string.h>
+#include <unistd.h>
 
 struct wallets {
     uint32_t key;
@@ -21,14 +23,13 @@ uint32_t key_gen() {
 
 uint32_t money_gen() {
     uint32_t money = rand() % 100;
-
     return money;
 }
 
-void generate_wallets(struct wallets* wallet) {	//looks so wrong at this point
+void generate_wallets(struct wallets* wallet) {	
     int i = 0;
     int num_wallets = 5000000;	//very suspicious
-    for (i; i < num_wallets; ++i) {	//also the ++i
+    for (i; i < num_wallets; ++i) {	//this starts with wallet[1]. Why? 
         wallet[i].key = key_gen();
         wallet[i].money = money_gen();
     }
@@ -42,18 +43,19 @@ void print_wallets(FILE* fp, int num_wallets, struct wallets* wallet) {
 
 int main(void) {
     printf("Welcome to the BTC wallet tracker.\n");
-    srand(time(NULL));	//hmmmmm
+    srand(time(NULL));
 
     char* filename = (char*)malloc(255);
-    char* command = (char*)malloc(255);	//good
+    char* command = (char*)malloc(255);	
     FILE* fp = NULL;
     int num_wallets;
     int is_generated = 0;
     int is_printed = 0;
+	char **argv = (char **)malloc(sizeof(char*) * 10);
     pid_t pid;
 
     printf("Please enter the file name that contains number of wallets: ");
-    fscanf(fp, "%s", filename);	//need a file pointer
+    scanf("%s", filename);	
     fp = fopen(filename, "r");
     fscanf(fp, "%d", &num_wallets);
     struct wallets* wallet = (struct wallets*)malloc(num_wallets * sizeof(struct wallets));
@@ -61,10 +63,10 @@ int main(void) {
     printf("Type 'help' for list of available commands.\n");
 prompt:
     printf("prompt> ");
-    fscanf("%s", command);	//again no file pointer or should just not be fscanf
+    scanf("%s", command);	//again no file pointer or should just not be fscanf
     if (strcmp(command, "help") == 0) {
         if ((pid = fork()) == 0) {
-            execvp("./print_help", NULL);
+            execvp("./print_help", argv);	//passed in a pointer, not allocated memory for string yet. Need to figure out in gdb
             exit(0);
         }
         sleep(1);
