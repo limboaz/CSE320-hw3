@@ -7,3 +7,9 @@
 #4 line 66, using strcmp without including the string library. 
 #5 line 67, 72, using fork and sleep without including the unistd library. 
 #6 line 69, passing a null argument to execvp when you cannot do it. 
+#7 in print_help.o, in 2c: b8 doesn't match with the given assembly code.
+#8 line 29, num_wallets should not be 5000000, it should take in the parameter read from input file. Also fixed in main funtion. 
+#9 line 41, passed in wallet[i].key twice. 
+#10 I am not sure if this is a bug, the program is not able to handle the case where user prints without generating wallets first. I added this error handling section. 
+#11 line 58, if the input filename is not a valid file, the program cannot handle it. Fixed this problem. 
+#12 line 64, if the input file does not contain a valid integer, the program still runs, which should not happen. Fixed this part. 

@@ -9,3 +9,4 @@ part2:
 
 wallet:
 	gcc	-g	wallet_stat.c	-o	wallet
+	gcc	-g	print_help.o	-o	print_help

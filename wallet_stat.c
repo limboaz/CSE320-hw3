@@ -26,9 +26,9 @@ uint32_t money_gen() {
     return money;
 }
 
-void generate_wallets(struct wallets* wallet) {	
+void generate_wallets(struct wallets* wallet, int num_wallets) {	
     int i = 0;
-    int num_wallets = 5000000;	//very suspicious
+    //int num_wallets = 5000000;	//very suspicious //Yes it is
     for (i; i < num_wallets; ++i) {	//this starts with wallet[1]. Why? 
         wallet[i].key = key_gen();
         wallet[i].money = money_gen();
@@ -38,7 +38,7 @@ void generate_wallets(struct wallets* wallet) {
 void print_wallets(FILE* fp, int num_wallets, struct wallets* wallet) {
     int i = 0;
     for (i; i < num_wallets; ++i)
-        fprintf(fp, "wallet: %x; money: %d\n", wallet[i].key, wallet[i].key);
+        fprintf(fp, "wallet: %x; money: %d\n", wallet[i].key, wallet[i].money);	//both keys??
 }
 
 int main(void) {
@@ -56,10 +56,18 @@ int main(void) {
 
     printf("Please enter the file name that contains number of wallets: ");
     scanf("%s", filename);	
-    fp = fopen(filename, "r");
-    fscanf(fp, "%d", &num_wallets);
+    if ( access(filename, F_OK) == -1){
+		printf("File doesn't exist. \n");
+		return 0;
+	}
+	fp = fopen(filename, "r");
+	if( fscanf(fp, "%d", &num_wallets) != 1){
+		printf("The input file is not valid. \n");
+		return 0;
+	}
+	
     struct wallets* wallet = (struct wallets*)malloc(num_wallets * sizeof(struct wallets));
-
+	
     printf("Type 'help' for list of available commands.\n");
 prompt:
     printf("prompt> ");
@@ -75,7 +83,7 @@ prompt:
     else if (strcmp(command, "generate") == 0) {
         if (!is_generated) {
             is_generated = 1;
-            generate_wallets(wallet);
+            generate_wallets(wallet, num_wallets);
         }
         else
             printf("Wallets are already generated.\n");
@@ -83,10 +91,14 @@ prompt:
     }
     else if (strcmp(command, "print") == 0) {
         if (!is_printed) {
-            is_printed = 1;
-            filename = "wallets_info.dat";
-            fp = fopen(filename, "w");
-            print_wallets(fp, num_wallets, wallet);
+            if ( is_generated != 1){
+				printf("Wallets are not generated yet.\n");
+			}else {
+				is_printed = 1;
+				filename = "wallets_info.dat";
+            	fp = fopen(filename, "w");
+            	print_wallets(fp, num_wallets, wallet);
+			}
         }
         else
             printf("Wallets are already printed.\n");
